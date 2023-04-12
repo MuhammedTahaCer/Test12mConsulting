@@ -1,0 +1,42 @@
+Tabloya bağlı olduğumuzu varsayarak, stok ekstresi için C# prosedürü aşağıdaki gibi yazılabilir:
+
+CREATE PROCEDURE GetStokEkstresi
+    @Malkodu nvarchar(50),
+    @BaslangicTarihi datetime,
+    @BitisTarihi datetime
+AS
+BEGIN
+    SELECT ROW_NUMBER() OVER (ORDER BY STI.Tarih) AS SiraNo,
+           CASE STI.IslemTur
+               WHEN 0 THEN 'Giriş'
+               WHEN 1 THEN 'Çıkış'
+           END AS IslemTur,
+           STI.EvrakNo,
+           CONVERT(VARCHAR(15), CAST(STI.Tarih - 2 AS datetime), 104) AS Tarih,
+           CASE STI.IslemTur
+               WHEN 0 THEN STI.Miktar
+               ELSE 0
+           END AS GirisMiktar,
+           CASE STI.IslemTur
+               WHEN 1 THEN STI.Miktar
+               ELSE 0
+           END AS CikisMiktar,
+           (SELECT SUM(CASE STI.IslemTur
+                            WHEN 0 THEN STI.Miktar
+                            WHEN 1 THEN -STI.Miktar
+                        END)
+            FROM STOK_ISLEMLERI STI
+            WHERE STI.Malkodu = @Malkodu AND STI.Tarih BETWEEN @BaslangicTarihi AND @BitisTarihi
+                  AND STI.ID <= SI.ID) AS Stok
+    FROM STOK_ISLEMLERI SI
+    WHERE SI.Malkodu = @Malkodu AND SI.Tarih BETWEEN @BaslangicTarihi AND @BitisTarihi
+END
+
+
+Bu prosedür, Malkodu, Başlangıç Tarihi ve Bitiş Tarihi gibi üç parametre alır.
+ Tarih alanına göre artan sıralama yapar ve SiraNo, IslemTur, EvrakNo, Tarih, GirisMiktar, CikisMiktar ve Stok alanlarını gösterir.
+
+SiraNo, IslemTur, EvrakNo ve Tarih alanları doğrudan ilgili alanlarından alınırken, GirisMiktar ve CikisMiktar alanları STI.IslemTur değerine göre belirlenir.
+ Stok alanı, STI.IslemTur değerine göre GirisMiktar ve CikisMiktar değerlerini toplayarak hesaplanır.
+
+Bu prosedürü kullanarak, stok ekstresi raporlarınızı oluşturabilirsiniz.
