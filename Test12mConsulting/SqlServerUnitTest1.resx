@@ -118,19 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SqlTest1_TestAction.SqlScript" xml:space="preserve">
-    <value>/*
-Add SQL statements here to exercise the database object 
-that you want to test.
-
-To test a stored procedure, invoke it here by adding 
-an EXEC statement that has appropriate parameters.
-
-In the lower pane, you can add test conditions that verify 
-whether the results of your SQL statements match what 
-you expect.
-*/
-
-CREATE PROCEDURE GetStokEkstresi2
+    <value>
+CREATE PROCEDURE GetStokEkstresi
     @Malkodu nvarchar(50),
     @BaslangicTarihi int,
     @BitisTarihi int
@@ -160,7 +149,9 @@ BEGIN
                   AND STI.ID &lt;= STI.ID) AS Stok
     FROM  STI
     WHERE STI.Malkodu = @Malkodu AND STI.Tarih BETWEEN @BaslangicTarihi AND @BitisTarihi
-END</value>
+END
+
+--execute GetStokEkstresi '10086 SİEMENS',42000,42789</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

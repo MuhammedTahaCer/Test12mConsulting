@@ -1,9 +1,8 @@
-Tabloya bağlı olduğumuzu varsayarak, stok ekstresi için C# prosedürü aşağıdaki gibi yazılabilir:
 
 CREATE PROCEDURE GetStokEkstresi
     @Malkodu nvarchar(50),
-    @BaslangicTarihi datetime,
-    @BitisTarihi datetime
+    @BaslangicTarihi int,
+    @BitisTarihi int
 AS
 BEGIN
     SELECT ROW_NUMBER() OVER (ORDER BY STI.Tarih) AS SiraNo,
@@ -25,13 +24,14 @@ BEGIN
                             WHEN 0 THEN STI.Miktar
                             WHEN 1 THEN -STI.Miktar
                         END)
-            FROM STOK_ISLEMLERI STI
+            FROM  STI
             WHERE STI.Malkodu = @Malkodu AND STI.Tarih BETWEEN @BaslangicTarihi AND @BitisTarihi
-                  AND STI.ID <= SI.ID) AS Stok
-    FROM STOK_ISLEMLERI SI
-    WHERE SI.Malkodu = @Malkodu AND SI.Tarih BETWEEN @BaslangicTarihi AND @BitisTarihi
+                  AND STI.ID <= STI.ID) AS Stok
+    FROM  STI
+    WHERE STI.Malkodu = @Malkodu AND STI.Tarih BETWEEN @BaslangicTarihi AND @BitisTarihi
 END
 
+execute GetStokEkstresi '10086 SİEMENS',42000,42789
 
 Bu prosedür, Malkodu, Başlangıç Tarihi ve Bitiş Tarihi gibi üç parametre alır.
  Tarih alanına göre artan sıralama yapar ve SiraNo, IslemTur, EvrakNo, Tarih, GirisMiktar, CikisMiktar ve Stok alanlarını gösterir.

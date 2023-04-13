@@ -62,12 +62,6 @@ namespace Test12mConsulting
             SqlTest1_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             ınconclusiveCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.InconclusiveCondition();
             // 
-            // SqlTest1Data
-            // 
-            this.SqlTest1Data.PosttestAction = null;
-            this.SqlTest1Data.PretestAction = null;
-            this.SqlTest1Data.TestAction = SqlTest1_TestAction;
-            // 
             // SqlTest1_TestAction
             // 
             SqlTest1_TestAction.Conditions.Add(ınconclusiveCondition1);
@@ -77,6 +71,12 @@ namespace Test12mConsulting
             // 
             ınconclusiveCondition1.Enabled = true;
             ınconclusiveCondition1.Name = "ınconclusiveCondition1";
+            // 
+            // SqlTest1Data
+            // 
+            this.SqlTest1Data.PosttestAction = null;
+            this.SqlTest1Data.PretestAction = null;
+            this.SqlTest1Data.TestAction = SqlTest1_TestAction;
         }
 
         #endregion
